@@ -24,6 +24,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    int index = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Details"),
@@ -35,11 +36,9 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
           child: RotationTransition(
             turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
             child: const Hero(
-              tag: "Hero effect",
+              tag: "planet",
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
-                ),
+                backgroundImage: AssetImage("asset/image/planetBg.jpg"),
               ),
             ),
           ),
