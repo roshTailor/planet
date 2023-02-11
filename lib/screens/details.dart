@@ -31,7 +31,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
     int index = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Details"),
+        title: const Text("Planet Details"),
       ),
       body: Stack(
         children: [
@@ -86,7 +86,9 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                         ),
                       ],
                     ),
-                    SizedBox(height: height/25,),
+                    SizedBox(
+                      height: height / 25,
+                    ),
                     Text(
                       "Description : \n${Variable.planets[index]['description']}",
                       style: const TextStyle(
@@ -100,42 +102,21 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
               ),
             ),
           ),
-          Container(
-            height: 300,
-            width: 300,
-            alignment: const Alignment(1, 0),
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: RotationTransition(
-              turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
-              child: Hero(
+          RotationTransition(
+            turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
+            child: Hero(
                 tag: "planet",
-                child: CircleAvatar(
-                  radius: 100,
-                  backgroundImage:
-                      NetworkImage(Variable.planets[index]['imageFile']),
-                ),
-              ),
-            ),
+                child: Container(
+                  height: 400,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(Variable.planets[index]['imageFile']),
+                    ),
+                  ),
+                )),
           ),
         ],
       ),
     );
   }
 }
-/*Center(
-          child: SizedBox(
-            height: 200,
-            width: 250,
-            child: RotationTransition(
-              turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
-              child: const Hero(
-                tag: "planet",
-                child: CircleAvatar(
-                  backgroundImage: AssetImage("asset/image/planetBg.jpg"),
-                ),
-              ),
-            ),
-          ),
-        ),*/
