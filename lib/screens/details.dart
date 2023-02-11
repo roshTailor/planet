@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:planet/util/Variable.dart';
+
+import 'package:flutter/scheduler.dart' show timeDilation;
 
 class DetailPage extends StatefulWidget {
   const DetailPage({Key? key}) : super(key: key);
@@ -22,6 +25,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    timeDilation = 5;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     int index = ModalRoute.of(context)!.settings.arguments as int;
@@ -29,21 +33,109 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
       appBar: AppBar(
         title: const Text("Details"),
       ),
-      body: Center(
-        child: SizedBox(
-          height: 200,
-          width: 250,
-          child: RotationTransition(
-            turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
-            child: const Hero(
-              tag: "planet",
-              child: CircleAvatar(
-                backgroundImage: AssetImage("asset/image/planetBg.jpg"),
+      body: Stack(
+        children: [
+          Image.network(
+            "https://wallpaperaccess.com/full/1683478.jpg",
+            fit: BoxFit.cover,
+            height: height,
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 300,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: <Color>[Color(0x00736AB7), Color(0xFF736AB7)],
+                  stops: [0.0, 0.9],
+                  begin: FractionalOffset(0.0, 0.0),
+                  end: FractionalOffset(0.0, 1.0),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    const Text(
+                      "Overview",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Distance : \n${Variable.planets[index]['distance']}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        Text(
+                          "Gravity : \n${Variable.planets[index]['gravity']}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: height/25,),
+                    Text(
+                      "Description : \n${Variable.planets[index]['description']}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+          Container(
+            height: 300,
+            width: 300,
+            alignment: const Alignment(1, 0),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: RotationTransition(
+              turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
+              child: Hero(
+                tag: "planet",
+                child: CircleAvatar(
+                  radius: 100,
+                  backgroundImage:
+                      NetworkImage(Variable.planets[index]['imageFile']),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
+/*Center(
+          child: SizedBox(
+            height: 200,
+            width: 250,
+            child: RotationTransition(
+              turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
+              child: const Hero(
+                tag: "planet",
+                child: CircleAvatar(
+                  backgroundImage: AssetImage("asset/image/planetBg.jpg"),
+                ),
+              ),
+            ),
+          ),
+        ),*/

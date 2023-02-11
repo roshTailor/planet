@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 
@@ -10,12 +11,26 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 5000),
+      vsync: this,
+    );
+    super.initState();
+    _controller.repeat();
+  }
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Planets"),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -34,43 +49,54 @@ class _HomePageState extends State<HomePage> {
                   width: _width,
                   child: Stack(
                     children: [
-                      Container(
-                        height: 160,
-                        margin: const EdgeInsets.only(left: 46),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF333366),
-                          shape: BoxShape.rectangle,
-                          gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFF8433BC),
-                                Color(0xFF010D41),
-                              ],
-                              begin: FractionalOffset(0, 0),
-                              end: FractionalOffset(1.8, 0),
-                              stops: [0, 0.5],
-                              tileMode: TileMode.clamp),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        alignment: const Alignment(-0.5, -0.5),
-                        child: Text(
-                          "${Variable.planets[index]['planetName']}",
-                          style: const TextStyle(color: Colors.white),
+                      BounceInRight(
+                        duration: const Duration(seconds: 10),
+                        child: Container(
+                          height: 160,
+                          margin: const EdgeInsets.only(left: 46),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF333366),
+                            shape: BoxShape.rectangle,
+                            gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xFF8433BC),
+                                  Color(0xFF010D41),
+                                ],
+                                begin: FractionalOffset(0, 0),
+                                end: FractionalOffset(1.8, 0),
+                                stops: [0, 0.5],
+                                tileMode: TileMode.clamp),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          alignment: const Alignment(-0.5, -0.5),
+                          child: Text(
+                            "${Variable.planets[index]['planetName']}",
+                            style: const TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, 'details', arguments: index);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 16),
-                          alignment: FractionalOffset.centerLeft,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Hero(
-                            tag: "planet",
-                            child: Image(
-                              image: AssetImage("asset/image/planetBg.jpg"),
+                      BounceInLeft(
+                        duration: const Duration(seconds: 8),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, 'details', arguments: index);
+                          },
+                          child: Container(
+                            height: 200,
+                            width: 200,
+                            alignment: FractionalOffset.centerLeft,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                            ),
+                            child:  RotationTransition(
+                              turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
+                              child: Hero(
+                                tag: "planet",
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: NetworkImage(Variable.planets[index]['imageFile']),
+                                ),
+                              ),
                             ),
                           ),
                         ),
